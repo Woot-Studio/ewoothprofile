@@ -51,8 +51,14 @@ function portoSrc(n) {
 }
 
 const works = [
-  // Link langsung Ewooth Studio diisi setelah website ini di-deploy.
-  { n: 1, cat: "Company Profile", title: "Ewooth Studio", href: "/", src: porto1, external: false },
+  {
+    n: 1,
+    cat: "Company Profile",
+    title: "Ewooth Studio",
+    href: "https://woot-studio.github.io/ewoothprofile/",
+    src: porto1,
+    external: true,
+  },
   {
     n: 2,
     cat: "Landing Page",
