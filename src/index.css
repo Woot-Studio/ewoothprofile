@@ -49,12 +49,13 @@ p {
 }
 
 :focus-visible {
-  outline: 3px solid #8ecfff;
-  outline-offset: 3px;
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 5px #0468ad;
 }
 
 section[id] {
-  scroll-margin-top: 88px;
+  scroll-margin-top: 96px;
 }
 
 @media (prefers-reduced-motion: reduce) {

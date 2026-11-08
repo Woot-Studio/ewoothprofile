@@ -1,4 +1,19 @@
 import { useEffect, useRef, useState } from "react";
+import {
+  FaArrowUpRightFromSquare,
+  FaBars,
+  FaBuilding,
+  FaCheck,
+  FaEnvelope,
+  FaInstagram,
+  FaPhone,
+  FaRocket,
+  FaWandMagicSparkles,
+  FaWhatsapp,
+  FaXmark,
+} from "react-icons/fa6";
+import { SiGmail, SiJavascript, SiReact, SiVite } from "react-icons/si";
+import keunggulanShowcase from "./assets/keunggulan-showcase.webp";
 import logo from "./assets/logo.png";
 import logoWhite from "./assets/logo-white.png";
 import porto1 from "./assets/porto1.png";
@@ -55,6 +70,7 @@ const works = [
     n: 1,
     cat: "Company Profile",
     title: "Ewooth Studio",
+    icon: "building",
     href: "https://woot-studio.github.io/ewoothprofile/",
     src: porto1,
     external: true,
@@ -63,6 +79,7 @@ const works = [
     n: 2,
     cat: "Landing Page",
     title: "PULL",
+    icon: "rocket",
     href: "https://pull-landing-page.vercel.app/",
     src: porto2,
     external: true,
@@ -71,6 +88,7 @@ const works = [
     n: 3,
     cat: "Landing Page",
     title: "Cocopra",
+    icon: "rocket",
     href: "https://cocopra-id.vercel.app/",
     src: porto3,
     external: true,
@@ -95,12 +113,12 @@ const solutions = [
   {
     title: "Landing Page",
     text: "Satu halaman yang fokus ke penawaran. Cocok untuk kampanye, promo, dan meningkatkan konversi.",
-    icon: "layout",
+    icon: "rocket",
   },
   {
     title: "Redesign Website",
     text: "Perbarui tampilan website lama supaya lebih modern, cepat, dan nyaman dipakai di semua perangkat.",
-    icon: "refresh",
+    icon: "redesign",
   },
 ];
 
@@ -144,86 +162,32 @@ const plans = [
   },
 ];
 
-function Icon({ name }) {
-  const props = {
-    viewBox: "0 0 24 24",
-    fill: "none",
-    stroke: "currentColor",
-    strokeWidth: "1.8",
-    strokeLinecap: "round",
-    strokeLinejoin: "round",
-    "aria-hidden": "true",
-  };
+const icons = {
+  check: FaCheck,
+  mail: FaEnvelope,
+  gmail: SiGmail,
+  phone: FaPhone,
+  chat: FaWhatsapp,
+  instagram: FaInstagram,
+  building: FaBuilding,
+  rocket: FaRocket,
+  redesign: FaWandMagicSparkles,
+  external: FaArrowUpRightFromSquare,
+  menu: FaBars,
+  close: FaXmark,
+};
 
-  const paths = {
-    check: <path d="M5 12.5 9.2 17 19 7" />,
-    mail: (
-      <>
-        <rect x="3.5" y="5.5" width="17" height="13" rx="2" />
-        <path d="m4 7 8 6 8-6" />
-      </>
-    ),
-    phone: (
-      <path d="M8 3.8h2.2l1.2 3-1.6 1a12 12 0 0 0 5.4 5.4l1-1.6 3 1.2V15a2 2 0 0 1-2.2 2A14.2 14.2 0 0 1 6 5.9 2 2 0 0 1 8 3.8Z" />
-    ),
-    chat: (
-      <path d="M6 16.5 3.8 19V6.8A2.3 2.3 0 0 1 6.1 4.5h11.8A2.3 2.3 0 0 1 20.2 6.8v7.4a2.3 2.3 0 0 1-2.3 2.3H6Z" />
-    ),
-    instagram: (
-      <>
-        <rect x="4" y="4" width="16" height="16" rx="4" />
-        <circle cx="12" cy="12" r="3.4" />
-        <circle cx="17.2" cy="6.8" r="0.8" fill="currentColor" stroke="none" />
-      </>
-    ),
-    building: (
-      <>
-        <path d="M4.5 20.5h15" />
-        <path d="M6.5 20.5V6.2L12 4l5.5 2.2v14.3" />
-        <path d="M10 20.5v-4h4v4M9.5 9h.5M14 9h.5M9.5 12.5h.5M14 12.5h.5" />
-      </>
-    ),
-    layout: (
-      <>
-        <rect x="4" y="4.5" width="16" height="15" rx="2" />
-        <path d="M4 9h16M10 9v10.5" />
-      </>
-    ),
-    refresh: (
-      <>
-        <path d="M20 12a8 8 0 1 1-2.2-5.5" />
-        <path d="M20 4.5V9h-4.5" />
-      </>
-    ),
-    devices: (
-      <>
-        <rect x="3" y="5" width="12" height="9" rx="1.5" />
-        <path d="M7 17.5h4" />
-        <rect x="16" y="8" width="5" height="9" rx="1.2" />
-        <path d="M15 10.2h1" />
-      </>
-    ),
-    shield: (
-      <>
-        <path d="M12 3.5 19 6.2v5.2c0 4.2-2.8 7.2-7 8.6-4.2-1.4-7-4.4-7-8.6V6.2L12 3.5Z" />
-        <path d="m9 12 2 2 4-4" />
-      </>
-    ),
-    headset: (
-      <>
-        <path d="M4.5 13v-1a7.5 7.5 0 0 1 15 0v1" />
-        <rect x="3.2" y="13" width="4" height="6" rx="1.4" />
-        <rect x="16.8" y="13" width="4" height="6" rx="1.4" />
-      </>
-    ),
-    menu: <path d="M4 7h16M4 12h16M4 17h16" />,
-    close: <path d="M6 6l12 12M18 6 6 18" />,
-  };
+function Icon({ name, ...rest }) {
+  const Glyph = icons[name];
+  if (!Glyph) return null;
 
   return (
-    <svg {...props} className="icon">
-      {paths[name]}
-    </svg>
+    <Glyph
+      className="icon"
+      aria-hidden="true"
+      focusable="false"
+      {...rest}
+    />
   );
 }
 
@@ -240,24 +204,38 @@ function Brand({ light = false }) {
 
 function Reveal({ as: Tag = "div", className = "", delay = 0, children, ...rest }) {
   const ref = useRef(null);
-  const [shown, setShown] = useState(false);
+  const [reveal, setReveal] = useState(() => ({
+    shown:
+      typeof window === "undefined" ||
+      typeof IntersectionObserver === "undefined" ||
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+    fromTop: false,
+  }));
 
   useEffect(() => {
     const node = ref.current;
     if (!node) return;
-
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      setShown(true);
-      return;
-    }
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (!entry.isIntersecting) return;
-        setShown(true);
-        observer.disconnect();
+        const fromTop =
+          entry.boundingClientRect.top < (entry.rootBounds?.top ?? 0);
+
+        setReveal((prev) => {
+          if (entry.intersectionRatio >= 0.18) {
+            if (prev.shown) return prev;
+            return { shown: true, fromTop };
+          }
+
+          if (entry.intersectionRatio === 0 && prev.shown) {
+            return { ...prev, shown: false };
+          }
+
+          return prev;
+        });
       },
-      { threshold: 0.18, rootMargin: "0px 0px -40px 0px" },
+      { threshold: [0, 0.18], rootMargin: "0px" },
     );
 
     observer.observe(node);
@@ -267,7 +245,7 @@ function Reveal({ as: Tag = "div", className = "", delay = 0, children, ...rest 
   return (
     <Tag
       ref={ref}
-      className={`${className} reveal${shown ? " is-in" : ""}`}
+      className={`${className} reveal${reveal.fromTop ? " from-top" : ""}${reveal.shown ? " is-in" : ""}`}
       style={{ "--d": `${delay}ms` }}
       {...rest}
     >
@@ -335,23 +313,108 @@ function WorkShot({ src, title, variant }) {
 
 export default function App() {
   const [open, setOpen] = useState(false);
+  const [active, setActive] = useState("#beranda");
+  const [scrolled, setScrolled] = useState(false);
+  const scrollLock = useRef(null);
 
   function closeMenu() {
     setOpen(false);
   }
 
+  useEffect(() => {
+    const sections = nav
+      .map(([, href]) => document.querySelector(href))
+      .filter(Boolean);
+
+    function onScroll() {
+      setScrolled(window.scrollY > 8);
+
+      if (scrollLock.current) return;
+
+      const line = 140;
+      let current = sections[0];
+
+      for (const section of sections) {
+        if (section.getBoundingClientRect().top <= line) current = section;
+      }
+
+      if (
+        window.innerHeight + window.scrollY >=
+        document.documentElement.scrollHeight - 4
+      ) {
+        current = sections[sections.length - 1];
+      }
+
+      if (current) setActive(`#${current.id}`);
+    }
+
+    function onScrollEnd() {
+      scrollLock.current = null;
+    }
+
+    const frame = requestAnimationFrame(onScroll);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    window.addEventListener("scrollend", onScrollEnd);
+
+    return () => {
+      cancelAnimationFrame(frame);
+      clearTimeout(scrollLock.current);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+      window.removeEventListener("scrollend", onScrollEnd);
+    };
+  }, []);
+
+  function goToSection(event, href) {
+    const target = document.querySelector(href);
+    if (!target) return;
+
+    event.preventDefault();
+
+    const reduceMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+
+    clearTimeout(scrollLock.current);
+    scrollLock.current = setTimeout(
+      () => {
+        scrollLock.current = null;
+      },
+      reduceMotion ? 0 : 1400,
+    );
+
+    target.scrollIntoView({
+      behavior: reduceMotion ? "auto" : "smooth",
+      block: "start",
+    });
+    window.history.replaceState(null, "", href);
+    setActive(href);
+    closeMenu();
+  }
+
   return (
     <>
-      <header className="header">
+      <header className={scrolled ? "header scrolled" : "header"}>
         <div className="wrap header-bar">
           <Brand />
           <nav className={open ? "nav open" : "nav"} aria-label="Utama">
             {nav.map(([label, href]) => (
-              <a key={href} href={href} onClick={closeMenu}>
+              <a
+                key={href}
+                href={href}
+                className={active === href ? "is-active" : undefined}
+                aria-current={active === href ? "location" : undefined}
+                onClick={(event) => goToSection(event, href)}
+              >
                 {label}
               </a>
             ))}
-            <a className="btn btn-solid nav-cta" href="#kontak" onClick={closeMenu}>
+            <a
+              className="btn btn-solid nav-cta"
+              href="#kontak"
+              onClick={(event) => goToSection(event, "#kontak")}
+            >
               Mulai
             </a>
           </nav>
@@ -397,23 +460,6 @@ export default function App() {
 
         <section className="partner" id="keunggulan">
           <div className="wrap partner-grid">
-            <div className="mosaic">
-              <Reveal as="article" className="tile tile-main">
-                <Icon name="devices" />
-                <h3>Responsif</h3>
-                <p>Tampil rapi di HP, tablet, dan desktop.</p>
-              </Reveal>
-              <Reveal as="article" className="tile tile-soft" delay={90}>
-                <Icon name="shield" />
-                <h3>Transparansi Proses</h3>
-                <p>Kamu tahu progres di setiap tahap pengerjaan.</p>
-              </Reveal>
-              <Reveal as="article" className="tile tile-mid" delay={160}>
-                <Icon name="headset" />
-                <h3>Dukungan</h3>
-                <p>Ada bantuan setelah website kamu live.</p>
-              </Reveal>
-            </div>
             <Reveal className="partner-copy" delay={120}>
               <span className="badge">Keunggulan</span>
               <h2>Partner Digital untuk Bisnismu</h2>
@@ -439,6 +485,17 @@ export default function App() {
               <a className="btn btn-solid" href="#harga">
                 Mulai
               </a>
+            </Reveal>
+            <Reveal className="partner-visual" delay={120}>
+              <img
+                className="partner-shot"
+                src={keunggulanShowcase}
+                alt="Website Ewooth Studio responsif di laptop dan ponsel dengan proses pengerjaan yang transparan"
+                width="1200"
+                height="613"
+                loading="lazy"
+                decoding="async"
+              />
             </Reveal>
           </div>
         </section>
@@ -495,8 +552,17 @@ export default function App() {
                     />
                   </div>
                   <div className="work-meta">
-                    <span>{item.cat}</span>
-                    <strong>{item.title}</strong>
+                    <div>
+                      <span className="work-cat">
+                        <Icon name={item.icon} />
+                        {item.cat}
+                      </span>
+                      <strong>{item.title}</strong>
+                    </div>
+                    <span className="work-open">
+                      <Icon name="external" />
+                      <span className="sr-only">Buka {item.title}</span>
+                    </span>
                   </div>
                 </Reveal>
               ))}
@@ -571,7 +637,7 @@ export default function App() {
               </div>
               <div className="contact-grid">
                 <a className="contact-tile" href={CONTACT.gmail} target="_blank" rel="noreferrer">
-                  <Icon name="mail" />
+                  <Icon name="gmail" />
                   <span>Email</span>
                   <strong>{CONTACT.email}</strong>
                 </a>
@@ -614,6 +680,23 @@ export default function App() {
               Website yang rapi, cepat, dan siap bantu bisnismu tampil lebih
               profesional.
             </p>
+            <div className="stack">
+              <span>Teknologi yang kami pakai</span>
+              <ul>
+                <li>
+                  <SiReact aria-hidden="true" />
+                  React
+                </li>
+                <li>
+                  <SiVite aria-hidden="true" />
+                  Vite
+                </li>
+                <li>
+                  <SiJavascript aria-hidden="true" />
+                  JavaScript
+                </li>
+              </ul>
+            </div>
           </div>
           <div>
             <h3>Menu</h3>
