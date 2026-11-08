@@ -32,6 +32,9 @@ gmailDraft.searchParams.set(
   "Halo Ewooth Studio,\n\nSaya ingin konsultasi pembuatan website.\n\nNama:\nJenis usaha:\nKebutuhan website:\n\nTerima kasih.",
 );
 
+const waLink = (text) =>
+  `https://wa.me/62881080664997?text=${encodeURIComponent(text)}`;
+
 const CONTACT = {
   email: EMAIL,
   gmail: gmailDraft.toString(),
@@ -125,7 +128,7 @@ const solutions = [
 const plans = [
   {
     name: "Landing Page",
-    price: "Rp 800 k",
+    price: "Rp 800rb",
     featured: false,
     items: [
       "1 halaman fokus penawaran",
@@ -137,7 +140,7 @@ const plans = [
   },
   {
     name: "Company Profile",
-    price: "Rp 1 jt",
+    price: "Rp 1jt",
     featured: true,
     items: [
       "Hingga 5 halaman",
@@ -149,11 +152,11 @@ const plans = [
     ],
   },
   {
-    name: "Redesign Website",
-    price: "Rp 800 k",
+    name: "Redesign Halaman",
+    price: "Rp 800rb",
     featured: false,
     items: [
-      "Tampilan baru website lama",
+      "Tampilan baru halaman utama",
       "Struktur halaman tetap",
       "Desain lebih modern",
       "Tampilan mobile diperbaiki",
@@ -257,39 +260,36 @@ function Reveal({ as: Tag = "div", className = "", delay = 0, children, ...rest 
 function BrowserArt() {
   return (
     <div className="hero-visual">
-    <div className="browser" aria-hidden="true">
-      <div className="browser-top">
-        <span />
-        <span />
-        <span />
-      </div>
-      <div className="browser-body">
-        <div>
-          <i />
-          <i />
-          <i />
-          <b />
+      <div className="browser" aria-hidden="true">
+        <div className="browser-top">
+          <span />
+          <span />
+          <span />
         </div>
-        <div className="browser-photo" />
+        <div className="browser-body">
+          <div>
+            <i />
+            <i />
+            <i />
+            <b />
+          </div>
+          <div className="browser-photo" />
+        </div>
       </div>
-    </div>
     </div>
   );
 }
 
 function WorkShot({ src, title, variant }) {
-  const [failed, setFailed] = useState(false);
-
-  useEffect(() => {
-    setFailed(false);
-  }, [src]);
+  const [failedSrc, setFailedSrc] = useState("");
+  const failed = failedSrc === src;
 
   if (src && !failed) {
     return (
       <img
         src={src}
         alt={`Cuplikan ${title}`}
-        onError={() => setFailed(true)}
+        onError={() => setFailedSrc(src)}
       />
     );
   }
@@ -316,10 +316,62 @@ export default function App() {
   const [active, setActive] = useState("#beranda");
   const [scrolled, setScrolled] = useState(false);
   const scrollLock = useRef(null);
+  const menuRef = useRef(null);
+  const menuBtnRef = useRef(null);
 
   function closeMenu() {
     setOpen(false);
   }
+
+  useEffect(() => {
+    if (!open) return;
+
+    function onKeyDown(event) {
+      if (event.key === "Escape") {
+        setOpen(false);
+        menuBtnRef.current?.focus();
+        return;
+      }
+
+      if (event.key !== "Tab" || !menuRef.current) return;
+
+      const items = [
+        ...menuRef.current.querySelectorAll("a, button"),
+      ].filter((el) => el.offsetParent !== null);
+      if (items.length === 0) return;
+
+      const first = items[0];
+      const last = items[items.length - 1];
+
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    }
+
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [open]);
+
+  useEffect(() => {
+    if (!open) return;
+
+    function onPointerDown(event) {
+      if (
+        menuRef.current?.contains(event.target) ||
+        menuBtnRef.current?.contains(event.target)
+      ) {
+        return;
+      }
+      setOpen(false);
+    }
+
+    document.addEventListener("pointerdown", onPointerDown);
+    return () => document.removeEventListener("pointerdown", onPointerDown);
+  }, [open]);
 
   useEffect(() => {
     const sections = nav
@@ -395,10 +447,18 @@ export default function App() {
 
   return (
     <>
+      <a className="skip-link" href="#main">
+        Lewati ke konten
+      </a>
       <header className={scrolled ? "header scrolled" : "header"}>
         <div className="wrap header-bar">
           <Brand />
-          <nav className={open ? "nav open" : "nav"} aria-label="Utama">
+          <nav
+            id="primary-nav"
+            ref={menuRef}
+            className={open ? "nav open" : "nav"}
+            aria-label="Utama"
+          >
             {nav.map(([label, href]) => (
               <a
                 key={href}
@@ -419,9 +479,11 @@ export default function App() {
             </a>
           </nav>
           <button
+            ref={menuBtnRef}
             className="menu-btn"
             type="button"
             aria-expanded={open}
+            aria-controls="primary-nav"
             aria-label={open ? "Tutup menu" : "Buka menu"}
             onClick={() => setOpen((value) => !value)}
           >
@@ -430,16 +492,15 @@ export default function App() {
         </div>
       </header>
 
-      <main>
+      <main id="main">
         <section className="hero" id="beranda">
           <div className="wrap hero-grid">
             <div className="hero-copy">
-              <span className="badge badge-dark">Studio Web</span>
               <h1>Wujudkan Website Impian untuk Bisnismu</h1>
               <p>
-                Kami bantu UMKM dan bisnis lokal punya website yang profesional,
-                cepat, dan mudah dikelola. Desain modern, responsif, dan harga
-                yang jelas.
+                Kami bantu UMKM dan bisnis lokal punya website profesional yang
+                cepat, mudah dikelola, dan harganya jelas. Pengerjaan 7–14 hari
+                kerja.
               </p>
               <div className="hero-actions">
                 <a className="btn btn-solid" href="#kontak">
@@ -449,10 +510,6 @@ export default function App() {
                   Lihat Portofolio
                 </a>
               </div>
-              <p className="stat">
-                <span>Estimasi pengerjaan</span>
-                7–14 Hari Kerja
-              </p>
             </div>
             <BrowserArt />
           </div>
@@ -461,21 +518,20 @@ export default function App() {
         <section className="partner" id="keunggulan">
           <div className="wrap partner-grid">
             <Reveal className="partner-copy" delay={120}>
-              <span className="badge">Keunggulan</span>
+              <span className="kicker">Keunggulan</span>
               <h2>Partner Digital untuk Bisnismu</h2>
               <p>
-                Dari ide sampai website tayang, kami dampingi prosesnya. Desain
-                yang rapi, pengerjaan yang transparan, dan dukungan setelah
-                website kamu live.
+                Dari ide sampai tayang, kami dampingi prosesnya. Pengerjaan
+                transparan dan ada dukungan setelah website kamu live.
               </p>
               <ul className="checks">
                 <li>
                   <Icon name="check" />
-                  Desain modern, responsif di semua perangkat
+                  Tampilan rapi di HP, tablet, dan desktop
                 </li>
                 <li>
                   <Icon name="check" />
-                  Proses jelas dari brief sampai website live
+                  Progres jelas dari brief sampai website live
                 </li>
                 <li>
                   <Icon name="check" />
@@ -483,7 +539,7 @@ export default function App() {
                 </li>
               </ul>
               <a className="btn btn-solid" href="#harga">
-                Mulai
+                Lihat Harga
               </a>
             </Reveal>
             <Reveal className="partner-visual" delay={120}>
@@ -502,13 +558,9 @@ export default function App() {
 
         <section className="section" id="layanan">
           <div className="wrap">
-            <Reveal className="section-head">
-              <span className="badge">Layanan</span>
+            <Reveal className="section-head is-left">
               <h2>Solusi Website Sesuai Kebutuhanmu</h2>
-              <p>
-                Pilih jenis website yang paling pas untuk tujuan bisnismu, dari
-                company profile sampai landing page kampanye.
-              </p>
+              <p>Pilih jenis website yang paling pas untuk tujuan bisnismu.</p>
             </Reveal>
             <div className="cards-3">
               {solutions.map((item, index) => (
@@ -525,9 +577,8 @@ export default function App() {
         </section>
 
         <section className="section" id="portofolio">
-          <div className="wrap">
-            <Reveal className="section-head">
-              <span className="badge">Portofolio</span>
+          <div className="wrap wrap--wide">
+            <Reveal className="section-head is-split">
               <h2>Hasil Karya Kami</h2>
               <p>
                 Beberapa website yang sudah kami kerjakan untuk berbagai jenis
@@ -573,11 +624,10 @@ export default function App() {
         <section className="section" id="harga">
           <div className="wrap">
             <Reveal className="section-head">
-              <span className="badge">Harga</span>
               <h2>Pilih Paket yang Pas untuk Bisnismu</h2>
               <p>
-                Harga ditulis dari awal, supaya kamu bisa pilih paket sesuai
-                kebutuhan tanpa biaya yang tersembunyi.
+                Harga sekali bayar, ditulis dari awal supaya tidak ada biaya
+                tersembunyi.
               </p>
             </Reveal>
             <div className="price-grid">
@@ -592,7 +642,6 @@ export default function App() {
                     <span className="popular">Paling diminati</span>
                   ) : null}
                   <h3>{plan.name}</h3>
-                  <p className="price-note">sekali bayar</p>
                   <p className="price">{plan.price}</p>
                   <ul>
                     {plan.items.map((feature) => (
@@ -604,9 +653,13 @@ export default function App() {
                   </ul>
                   <a
                     className={plan.featured ? "btn btn-solid" : "btn btn-line"}
-                    href="#kontak"
+                    href={waLink(
+                      `Halo Ewooth Studio, saya tertarik paket ${plan.name} (${plan.price}).`,
+                    )}
+                    target="_blank"
+                    rel="noreferrer"
                   >
-                    Pilih Paket
+                    Pilih {plan.name}
                   </a>
                 </Reveal>
               ))}
@@ -618,11 +671,10 @@ export default function App() {
           <div className="wrap">
             <Reveal className="cta">
               <div>
-                <span className="badge badge-dark">Kontak</span>
-                <h2>Siap Bikin Website Impianmu?</h2>
+                <h2>Ceritakan Kebutuhan Websitemu</h2>
                 <p>
-                  Ceritakan kebutuhan website-mu. Kami bantu dari konsep sampai
-                  website siap dipakai.
+                  Konsultasi gratis, tanpa komitmen. Kami bantu dari konsep
+                  sampai website siap dipakai.
                 </p>
                 <div className="hero-actions">
                   <a className="btn btn-solid" href={CONTACT.whatsapp} target="_blank" rel="noreferrer">
@@ -635,36 +687,32 @@ export default function App() {
                   </a>
                 </div>
               </div>
-              <div className="contact-grid">
-                <a className="contact-tile" href={CONTACT.gmail} target="_blank" rel="noreferrer">
+              <div className="contact-list">
+                <a className="contact-row" href={CONTACT.gmail} target="_blank" rel="noreferrer">
                   <Icon name="gmail" />
-                  <span>Email</span>
-                  <strong>{CONTACT.email}</strong>
+                  <div>
+                    <span>Email</span>
+                    <strong>{CONTACT.email}</strong>
+                  </div>
                 </a>
-                <a className="contact-tile" href={CONTACT.phoneHref}>
-                  <Icon name="phone" />
-                  <span>Telepon</span>
-                  <strong>{CONTACT.phone}</strong>
+                <a className="contact-row" href={CONTACT.whatsapp} target="_blank" rel="noreferrer">
+                  <Icon name="chat" />
+                  <div>
+                    <span>WhatsApp</span>
+                    <strong>{CONTACT.phone}</strong>
+                  </div>
                 </a>
                 <a
-                  className="contact-tile"
+                  className="contact-row"
                   href={CONTACT.instagram}
                   target="_blank"
                   rel="noreferrer"
                 >
                   <Icon name="instagram" />
-                  <span>Instagram</span>
-                  <strong>{CONTACT.instagramLabel}</strong>
-                </a>
-                <a
-                  className="contact-tile"
-                  href={CONTACT.whatsapp}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  <Icon name="chat" />
-                  <span>WhatsApp</span>
-                  <strong>{CONTACT.phone}</strong>
+                  <div>
+                    <span>Instagram</span>
+                    <strong>{CONTACT.instagramLabel}</strong>
+                  </div>
                 </a>
               </div>
             </Reveal>
@@ -677,11 +725,10 @@ export default function App() {
           <div>
             <Brand light />
             <p>
-              Website yang rapi, cepat, dan siap bantu bisnismu tampil lebih
-              profesional.
+              Kami bantu bisnis lokal tampil lebih meyakinkan di internet.
             </p>
             <div className="stack">
-              <span>Teknologi yang kami pakai</span>
+              <span>Dibangun dengan</span>
               <ul>
                 <li>
                   <SiReact aria-hidden="true" />
