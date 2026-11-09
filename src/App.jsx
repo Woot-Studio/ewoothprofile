@@ -13,6 +13,7 @@ import {
   FaXmark,
 } from "react-icons/fa6";
 import { SiGmail, SiJavascript, SiReact, SiVite } from "react-icons/si";
+import heroShowcase from "./assets/hero-showcase.webp";
 import keunggulanShowcase from "./assets/keunggulan-showcase.webp";
 import logo from "./assets/logo.png";
 import logoWhite from "./assets/logo-white.png";
@@ -260,22 +261,15 @@ function Reveal({ as: Tag = "div", className = "", delay = 0, children, ...rest 
 function BrowserArt() {
   return (
     <div className="hero-visual">
-      <div className="browser" aria-hidden="true">
-        <div className="browser-top">
-          <span />
-          <span />
-          <span />
-        </div>
-        <div className="browser-body">
-          <div>
-            <i />
-            <i />
-            <i />
-            <b />
-          </div>
-          <div className="browser-photo" />
-        </div>
-      </div>
+      <img
+        className="hero-shot"
+        src={heroShowcase}
+        alt="Contoh website modern dan responsif di laptop dan ponsel"
+        width="1400"
+        height="788"
+        fetchPriority="high"
+        decoding="async"
+      />
     </div>
   );
 }
@@ -547,8 +541,8 @@ export default function App() {
                 className="partner-shot"
                 src={keunggulanShowcase}
                 alt="Website Ewooth Studio responsif di laptop dan ponsel dengan proses pengerjaan yang transparan"
-                width="1200"
-                height="613"
+                width="1400"
+                height="715"
                 loading="lazy"
                 decoding="async"
               />
