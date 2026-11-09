@@ -512,7 +512,6 @@ export default function App() {
         <section className="partner" id="keunggulan">
           <div className="wrap partner-grid">
             <Reveal className="partner-copy" delay={120}>
-              <span className="kicker">Keunggulan</span>
               <h2>Partner Digital untuk Bisnismu</h2>
               <p>
                 Dari ide sampai tayang, kami dampingi prosesnya. Pengerjaan
