@@ -884,39 +884,6 @@
   max-width: 32ch;
 }
 
-.stack {
-  margin-top: 20px;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 12px;
-  color: var(--subtle);
-  font-size: 14px;
-}
-
-.stack ul {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 14px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.stack li {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  color: var(--on-dark-muted);
-  font-weight: 600;
-}
-
-.stack li svg {
-  width: 15px;
-  height: 15px;
-  color: var(--blue-bright);
-}
-
 .copyright {
   margin-top: 40px;
   padding-top: 20px;

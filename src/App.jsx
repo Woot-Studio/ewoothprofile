@@ -12,7 +12,7 @@ import {
   FaWhatsapp,
   FaXmark,
 } from "react-icons/fa6";
-import { SiGmail, SiJavascript, SiReact, SiVite } from "react-icons/si";
+import { SiGmail } from "react-icons/si";
 import heroShowcase from "./assets/hero-showcase.webp";
 import keunggulanShowcase from "./assets/keunggulan-showcase.webp";
 import logo from "./assets/logo.png";
@@ -720,23 +720,6 @@ export default function App() {
             <p>
               Kami bantu bisnis lokal tampil lebih meyakinkan di internet.
             </p>
-            <div className="stack">
-              <span>Dibangun dengan</span>
-              <ul>
-                <li>
-                  <SiReact aria-hidden="true" />
-                  React
-                </li>
-                <li>
-                  <SiVite aria-hidden="true" />
-                  Vite
-                </li>
-                <li>
-                  <SiJavascript aria-hidden="true" />
-                  JavaScript
-                </li>
-              </ul>
-            </div>
           </div>
           <div>
             <h3>Menu</h3>
