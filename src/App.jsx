@@ -767,7 +767,7 @@ export default function App() {
             </a>
           </div>
         </div>
-        <p className="copyright">© 2026 Ewooth Studio. Hak cipta dilindungi.</p>
+        <p className="wrap copyright">© 2026 Ewooth Studio. Hak cipta dilindungi.</p>
       </footer>
     </>
   );
