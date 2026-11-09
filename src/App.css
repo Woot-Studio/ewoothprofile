@@ -470,7 +470,7 @@
   align-items: flex-start;
   gap: 10px;
   color: var(--ink-soft);
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .checks .icon,
@@ -741,7 +741,6 @@
 .price-card.featured {
   background: var(--navy-deep);
   color: #fff;
-  transform: translateY(-8px);
 }
 
 .price-card.featured h3,
@@ -1066,10 +1065,6 @@
 
   .hero-shot {
     animation: none;
-  }
-
-  .price-card.featured {
-    transform: none;
   }
 
   .partner {
