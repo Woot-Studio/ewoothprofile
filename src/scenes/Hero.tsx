@@ -234,19 +234,30 @@ export function Hero() {
       let px = window.innerWidth / 2;
       let py = window.innerHeight / 2;
       let raf = 0;
+      let visible = true;
+      let interactive = true;
 
       const tick = () => {
+        raf = 0;
+        if (!visible || document.hidden) return;
         const p = tl.progress();
+        // Read geometry together before writing font variations to avoid repeated layout flushes.
+        const rects = chars.map((ch) => ch.getBoundingClientRect());
         chars.forEach((ch, i) => {
-          const r = ch.getBoundingClientRect();
+          const r = rects[i];
           const dist = Math.hypot(px - (r.left + r.width / 2), py - (r.top + r.height / 2));
           const target = dist < 140 ? 200 + (600 * dist) / 140 : 800;
           weights[i] += (target - weights[i]) * 0.15;
           ch.style.fontVariationSettings = `"wght" ${weights[i].toFixed(1)}`;
         });
         if (p < 0.04) {
+          if (!interactive) {
+            drags.forEach((d) => d.enable());
+            interactive = true;
+          }
+          const tileRects = tiles.map((tile) => tile.getBoundingClientRect());
           tiles.forEach((tile, i) => {
-            const r = tile.getBoundingClientRect();
+            const r = tileRects[i];
             const cx = r.left + r.width / 2;
             const cy = r.top + r.height / 2;
             const dxr = px - cx;
@@ -262,16 +273,32 @@ export function Hero() {
             }
           });
           drifts.forEach((d) => d.resume());
-        } else {
+        } else if (interactive) {
           drifts.forEach((d) => d.pause());
           drags.forEach((d, i) => {
             d.disable();
             gsap.set(quicks[i].el, { x: 0, y: 0 });
           });
+          interactive = false;
         }
         raf = requestAnimationFrame(tick);
       };
-      raf = requestAnimationFrame(tick);
+      const syncLoop = () => {
+        if (visible && !document.hidden) {
+          if (!raf) raf = requestAnimationFrame(tick);
+        } else {
+          cancelAnimationFrame(raf);
+          raf = 0;
+          drifts.forEach((d) => d.pause());
+        }
+      };
+      const observer = new IntersectionObserver(([entry]) => {
+        visible = entry.isIntersecting;
+        syncLoop();
+      });
+      observer.observe(stage);
+      document.addEventListener("visibilitychange", syncLoop);
+      syncLoop();
 
       const onPtr = (e: PointerEvent) => {
         px = e.clientX;
@@ -301,6 +328,8 @@ export function Hero() {
 
       return () => {
         cancelAnimationFrame(raf);
+        observer.disconnect();
+        document.removeEventListener("visibilitychange", syncLoop);
         window.removeEventListener("pointermove", onPtr);
         tiles.forEach((t) => t.removeEventListener("pointerdown", onTap));
         drags.forEach((d) => d.kill());
