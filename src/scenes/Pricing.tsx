@@ -1,6 +1,6 @@
 import { useLayoutEffect, useRef } from "react";
 import { gsap, ScrollTrigger } from "../gsap-setup";
-import { registerShot, WA } from "../shots";
+import { registerShot, planWhatsApp } from "../shots";
 
 const PLANS = [
   {
@@ -100,7 +100,7 @@ export function Pricing() {
                     <li key={f}>{f}</li>
                   ))}
                 </ul>
-                <a className={`btn btn-plan${plan.popular ? "" : " btn-primary"}`} href={WA} target="_blank" rel="noreferrer">
+                <a className={`btn btn-plan${plan.popular ? "" : " btn-primary"}`} href={planWhatsApp(plan.name, plan.price)} target="_blank" rel="noreferrer">
                   {plan.cta}
                 </a>
               </div>

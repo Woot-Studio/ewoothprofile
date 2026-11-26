@@ -99,7 +99,7 @@ export function Work() {
             </div>
             <div className="laptop">
               <div className="laptop-screen">
-                <img className="shot" src={p.img} alt="" />
+                <img className="shot" src={p.img} alt="" decoding="async" />
                 <div className="screen-off">
                   <img src="/favicon.png" alt="" />
                 </div>

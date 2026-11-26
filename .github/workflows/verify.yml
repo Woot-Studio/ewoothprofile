@@ -1,0 +1,40 @@
+name: Verify landing page
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: verify-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - name: Type check and production build
+        run: npm run build
+      - name: Verify static assets
+        run: |
+          test -s dist/index.html
+          test -s dist/robots.txt
+          test -s dist/sitemap.xml
+          test -s dist/favicon.png
+          test -s dist/work/ewooth.jpg
+          grep -q 'https://ewoot.my.id/' dist/sitemap.xml
+          grep -q 'rel="canonical"' dist/index.html
+          grep -q 'property="og:image"' dist/index.html
+          grep -q 'application/ld+json' dist/index.html

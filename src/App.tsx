@@ -14,7 +14,9 @@ import { Contact } from "./scenes/Contact";
 
 export function App() {
   useLayoutEffect(() => {
+    let disposed = false;
     const go = () => {
+      if (disposed) return;
       ScrollTrigger.sort();
       ScrollTrigger.refresh();
       runShot();
@@ -22,7 +24,10 @@ export function App() {
     go();
     document.fonts.ready.then(go);
     window.addEventListener("load", go);
-    return () => window.removeEventListener("load", go);
+    return () => {
+      disposed = true;
+      window.removeEventListener("load", go);
+    };
   }, []);
 
   return (
