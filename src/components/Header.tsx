@@ -20,9 +20,11 @@ export function Header() {
   const [waiting, setWaiting] = useState(!skipIntro);
   const closeTimer = useRef<number | null>(null);
   const head = useRef<HTMLElement>(null);
+  const menuButton = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     const onDone = () => setWaiting(false);
+    if (!document.querySelector(".intro:not([hidden])")) onDone();
     window.addEventListener("intro:done", onDone);
     return () => window.removeEventListener("intro:done", onDone);
   }, []);
@@ -54,7 +56,7 @@ export function Header() {
       setSolid(y > window.innerHeight * 1.7);
       if (dy > 0) {
         acc = 0;
-        if (y > 80) setOpen(false);
+        if (y > 80 && !head.current?.contains(document.activeElement)) setOpen(false);
       } else {
         acc += -dy;
         if (acc >= 24 && window.matchMedia("(min-width: 768px)").matches) {
@@ -69,7 +71,7 @@ export function Header() {
   }, []);
 
   useEffect(() => {
-    if (!open) return;
+    if (!open || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const tag = head.current?.querySelector(".logo-tag");
     if (!tag) return;
     const tween = gsap.fromTo(
@@ -85,27 +87,41 @@ export function Header() {
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setOpen(false);
+      if (e.key === "Escape") {
+        if (head.current?.contains(document.activeElement)) menuButton.current?.focus();
+        setOpen(false);
+      }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [open]);
 
+  useEffect(() => () => {
+    if (closeTimer.current !== null) window.clearTimeout(closeTimer.current);
+  }, []);
+
   const armClose = () => {
     if (closeTimer.current) window.clearTimeout(closeTimer.current);
-    closeTimer.current = window.setTimeout(() => setOpen(false), 600);
+    closeTimer.current = window.setTimeout(() => {
+      if (!head.current?.contains(document.activeElement)) setOpen(false);
+    }, 600);
   };
   const cancelClose = () => {
     if (closeTimer.current) window.clearTimeout(closeTimer.current);
   };
 
   const go = (href: string) => (e: MouseEvent) => {
+    if (e.metaKey || e.ctrlKey || e.altKey || e.shiftKey || e.button !== 0) return;
+    const el = document.querySelector<HTMLElement>(href);
+    if (!el) return;
     e.preventDefault();
     setOpen(false);
-    const el = document.querySelector(href);
-    if (!el) return;
+    if (location.hash !== href) history.pushState(null, "", href);
+    el.tabIndex = -1;
+    el.focus({ preventScroll: true });
     const y = el.getBoundingClientRect().top + window.scrollY;
-    window.scrollTo({ top: y, behavior: "smooth" });
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    window.scrollTo({ top: y, behavior: reduce ? "instant" : "smooth" });
   };
 
   return (
@@ -126,11 +142,12 @@ export function Header() {
           }
         }}
       >
-        <nav className="nav-left wing" aria-label="Utama" aria-hidden={!open}>
+        <nav className="nav-left wing" aria-label="Utama" aria-hidden={!open} inert={!open}>
           {LEFT.map((item, i) => (
             <a
               key={item.href}
               href={item.href}
+              aria-current={active === item.href ? "location" : undefined}
               className={`nav-item${active === item.href ? " on" : ""}`}
               style={{ ["--d" as string]: `${(LEFT.length - 1 - i) * 35}ms`, ["--dc" as string]: `${i * 35}ms` }}
               onClick={go(item.href)}
@@ -141,20 +158,22 @@ export function Header() {
         </nav>
         <div className="logo-slot">
           <button
+            ref={menuButton}
+            type="button"
             className={`logo-btn${waiting ? " waiting" : ""}`}
-            aria-label="Ewooth Studio, buka menu"
+            aria-label={open ? "Tutup menu Ewooth Studio" : "Buka menu Ewooth Studio"}
             aria-expanded={open}
             onClick={() => setOpen((v) => !v)}
-            onFocus={() => setOpen(true)}
           >
             <Logo size={40} />
           </button>
         </div>
-        <nav className="nav-right wing" aria-label="Lanjutan" aria-hidden={!open}>
+        <nav className="nav-right wing" aria-label="Lanjutan" aria-hidden={!open} inert={!open}>
           {RIGHT.map((item, i) => (
             <a
               key={item.href}
               href={item.href}
+              aria-current={active === item.href ? "location" : undefined}
               className={`nav-item${active === item.href ? " on" : ""}`}
               style={{ ["--d" as string]: `${i * 35}ms`, ["--dc" as string]: `${(RIGHT.length - i) * 35}ms` }}
               onClick={go(item.href)}

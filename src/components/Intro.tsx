@@ -11,7 +11,7 @@ export function Intro() {
     const el = root.current;
     if (!el) return;
     if (skipIntro || reduce) {
-      el.remove();
+      el.hidden = true;
       window.dispatchEvent(new Event("intro:done"));
       return;
     }
@@ -22,7 +22,12 @@ export function Intro() {
     const bar = el.querySelector(".progress-fill") as HTMLElement;
     const tag = el.querySelector(".logo-tag");
     const headerBtn = () => document.querySelector(".logo-btn") as HTMLElement | null;
-    const revisited = sessionStorage.getItem("ewooth-intro") === "1";
+    let revisited = false;
+    try {
+      revisited = sessionStorage.getItem("ewooth-intro") === "1";
+    } catch {
+      // Storage can be blocked by browser privacy settings.
+    }
 
     const place = () => {
       const btn = headerBtn();
@@ -37,7 +42,11 @@ export function Intro() {
 
     const tl = gsap.timeline({
       onComplete: () => {
-        sessionStorage.setItem("ewooth-intro", "1");
+        try {
+          sessionStorage.setItem("ewooth-intro", "1");
+        } catch {
+          // The intro must still finish if storage is unavailable.
+        }
         document.querySelector(".logo-btn")?.classList.remove("waiting");
         el.remove();
         window.dispatchEvent(new Event("intro:done"));
@@ -121,7 +130,7 @@ export function Intro() {
   }, []);
 
   return (
-    <div className="intro" ref={root}>
+    <div className="intro" ref={root} aria-hidden="true">
       <div className="intro-shade" />
       <div className="intro-logo light-wrap">
         <Logo size={window.innerWidth < 768 ? 150 : 220} light />

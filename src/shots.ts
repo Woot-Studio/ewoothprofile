@@ -1,7 +1,7 @@
 const q = new URLSearchParams(location.search);
 
 export const shot = q.get("shot");
-export const skipIntro = q.has("nointro") || !!shot || q.has("reduce");
+export const skipIntro = q.has("nointro") || !!shot || q.has("reduce") || window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 const shots = new Map<string, () => void>();
 
